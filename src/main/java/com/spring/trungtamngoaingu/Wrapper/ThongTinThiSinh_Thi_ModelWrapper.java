@@ -1,12 +1,14 @@
 package com.spring.trungtamngoaingu.Wrapper;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import Model.DiemThiModel;
+import Model.KhoaThiModel;
 import Model.PhongThiModel;
 
 
 public class ThongTinThiSinh_Thi_ModelWrapper {
-
 	private ArrayList<ArrayList<DiemThiModel>> diemThiList;
 	private ArrayList<PhongThiModel> phongThiList;
 
@@ -32,5 +34,8 @@ public class ThongTinThiSinh_Thi_ModelWrapper {
 		}
 	}
 	
-	
+	public String convertDateVietNam(LocalDate date) {
+		String formattedDate = date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		return formattedDate;
+	}
 }

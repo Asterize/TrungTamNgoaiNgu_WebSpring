@@ -107,6 +107,8 @@ th, td {
 							<th>Số Lượng</th>
 							<th>Trình Độ</th>
 							<th>Mã Khóa Thi</th>
+							<th>Tên Khóa Thi</th>
+							<th>Ngày Thi</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -118,6 +120,8 @@ th, td {
 							<td style="text-align: center;"
 								th:text="${phong.getTenTrinhDo()}"></td>
 							<td style="text-align: center;" th:text="${phong.getMaKT()}"></td>
+							<td style="text-align: center;" th:text="${phong.getKhoaThiByMaKT()?.getTenKhoaThi()}"></td>
+							<td style="text-align: center;" th:text="${ketQuaTraCuu.convertDateVietNam(phong.getKhoaThiByMaKT()?.getNgayThi())}"></td>
 						</tr>
 					</tbody>
 				</table>
