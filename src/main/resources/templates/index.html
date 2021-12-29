@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<title>Trung Tâm Ngoại Ngữ</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" th:href="@{/images/favicon2.ico}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/theme.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+.w3-sidebar {
+	z-index: 3;
+	width: 280px;
+	top: 43px;
+	bottom: 0;
+	height: inherit;
+}
+</style>
+<body>
+
+	<!-- Navbar -->
+	<div class="w3-top">
+		<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+			<a
+				class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1"
+				href="javascript:void(0)" onclick="w3_open()"><i
+				class="fa fa-bars"></i></a> <a href="#"
+				class="w3-bar-item w3-button w3-theme-l1">Trung Tâm Ngoại Ngữ</a> <a href="#"
+				class="w3-bar-item w3-button w3-hide-small w3-hover-white">Giới thiệu</a>
+<!-- 			<a href="#" -->
+<!-- 				class="w3-bar-item w3-button w3-hide-small w3-hover-white">Values</a> -->
+<!-- 			<a href="#" -->
+<!-- 				class="w3-bar-item w3-button w3-hide-small w3-hover-white">News</a> -->
+<!-- 			<a href="#" -->
+<!-- 				class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a> -->
+<!-- 			<a href="#" -->
+<!-- 				class="w3-bar-item w3-button w3-hide-small w3-hide-medium w3-hover-white">Clients</a> -->
+<!-- 			<a href="#" -->
+<!-- 				class="w3-bar-item w3-button w3-hide-small w3-hide-medium w3-hover-white">Partners</a> -->
+		</div>
+	</div>
+
+	<!-- Sidebar -->
+	<nav
+		class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left"
+		id="mySidebar">
+		<a href="javascript:void(0)" onclick="w3_close()"
+			class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large"
+			title="Close Menu"> <i class="fa fa-remove"></i>
+		</a>
+		<h4 class="w3-bar-item">
+			<b>Danh sách chức năng</b>
+		</h4>
+		<a class="w3-bar-item w3-button w3-hover-black" href="/"> <img
+			th:src="@{/images/iconhome.png}" width="32" height="32"></img>&nbsp;Trang
+			chủ
+		</a> <a class="w3-bar-item w3-button w3-hover-black" href="/DangKyThi"> <img
+			th:src="@{/images/icons8-plane-60.png}" width="32" height="32"></img>&nbsp;Đăng ký dự thi trực tuyến
+		</a> <a class="w3-bar-item w3-button w3-hover-black" href="/TraCuu"> <img
+			th:src="@{/images/icons8-tour-guide-48.png}" width="32" height="32"></img>&nbsp;Tra cứu thông tin thí sinh
+		</a> <a class="w3-bar-item w3-button w3-hover-black" href="/XemChungNhanKetQuaThi"> <img
+			th:src="@{/images/icons8-employee-64.png}" width="32" height="32"></img>&nbsp;Xem giấy chứng nhận kết quả thi
+		</a> <a class="w3-bar-item w3-button w3-hover-black" href="/XemDanhSachThiSinhTheoPhong"> <img
+			th:src="@{/images/icons8-employee-64.png}" width="32" height="32"></img>&nbsp;Xem danh sách thí sinh theo phòng
+		</a> <a class="w3-bar-item w3-button w3-hover-black" href="/ThongKe"><img
+			th:src="@{/images/chart-icon.png}" width="32" height="32"></img>&nbsp;Thống kê theo trình độ</a>
+	</nav>
+
+	<!-- Overlay effect when opening sidebar on small screens -->
+	<div class="w3-overlay w3-hide-large" onclick="w3_close()"
+		style="cursor: pointer" title="close side menu" id="myOverlay"></div>
+
+	<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+	<div class="w3-main" style="margin-left: 280px">
+
+		<div class="w3-row w3-padding-64">
+			<div class="w3-twothird w3-container">
+				<h1 class="w3-text-teal">Phần mềm Quản lý Tour du lịch 2021</h1>
+				<p>Demo phần mềm quản lý tour 2021.</p>
+			</div>
+			<div class="w3-third w3-container">
+				<p><img th:src="@{/images/anh1.jpg}" width="350" height="210"></img></p>
+				<p><img th:src="@{/images/anh2.jpg}" width="350" height="210"></img></p>
+<!-- 				<p><img th:src="@{/images/anh2.jpg}" width="200" height="120"></img></p> -->
+<!-- 				<p class="w3-border w3-padding-large w3-padding-32 w3-center">AD</p> -->
+<!-- 				<p class="w3-border w3-padding-large w3-padding-64 w3-center">AD</p> -->
+			</div>
+		</div>
+
+		<div class="w3-row">
+			<div class="w3-twothird w3-container">
+				<h1 class="w3-text-teal">SAIGON TRAVEL Co.,Ltd   </h1>
+				<p>Saigon Travel là công ty du lịch hàng đầu, với kinh nghiệm thâm niên trên 18 năm hoạt động trong lĩnh vực du lịch và dịch vụ, chúng tôi luôn cố gắng hết mình để mang lại những trải nghiệm tuyệt vời nhất cho bất cứ khách hàng nào đến với chúng tôi.
+				Với phương châm " Đi đến bất cứ nơi nào bạn thích" , Saigon Travel có một hệ thống chương trình điểm đến đa dạng và đặc sắc, luôn sẵn sàng hỗ trợ bất cứ bàn chân Việt đến bất cứ nơi đâu. Xin Chân Thành Cám Ơn tất cả khách hàng và đối tác luôn ủng hộ dịch vụ Saigon Travel.
+				</p>
+			</div>
+			<div class="w3-third w3-container">
+				<p><img th:src="@{/images/anh3.jpeg}" width="350" height="210"></img></p>
+<!-- 				<p class="w3-border w3-padding-large w3-padding-32 w3-center">AD</p> -->
+<!-- 				<p class="w3-border w3-padding-large w3-padding-64 w3-center">AD</p> -->
+			</div>
+		</div>
+
+		<div class="w3-row w3-padding-64">
+			<div class="w3-twothird w3-container">
+<!-- 				<h1 class="w3-text-teal">Heading</h1> -->
+				<p> Chúng tôi mong muốn rằng, Saigon Travel không chỉ là đơn vị tổ chức và cung cấp tour du lịch cho khách hàng, mà sẽ trở thành một người đồng hành tin cậy của du khách trong tất cả những điểm đến ở Việt Nam cũng như thế giới. Đó là lý do hơn mười năm qua Saigon Travel đã từng bước lớn mạnh, trở thành một trong những công ty lữ hành hàng đầu tại Việt Nam với hàng trăm đối tác và khách hàng lớn. Dấn thân - Trung thực - Hiệu quả là bản sắc của Saigon Travel, cũng là giá trị cốt lõi để chúng tôi duy trì và phát triển doanh nghiệp nhằm đạt được những thành công hơn trong tương lai. Du lịch mang cả thế giới gần hơn và Saigon Travel sẽ giúp cho du lịch trên khắp năm châu dễ dàng hơn bao giờ hết. Hãy để sự phục vụ của chúng tôi thuyết phục bạn!</p>
+			</div>
+			<div class="w3-third w3-container">
+				<p><img th:src="@{/images/anh4.jpg}" width="350" height="210"></img></p>
+<!-- 				<p class="w3-border w3-padding-large w3-padding-32 w3-center">AD</p> -->
+<!-- 				<p class="w3-border w3-padding-large w3-padding-64 w3-center">AD</p> -->
+			</div>
+		</div>
+
+		<!-- Pagination -->
+		<!--
+  <div class="w3-center w3-padding-32">
+    <div class="w3-bar">
+      <a class="w3-button w3-black" href="#">1</a>
+      <a class="w3-button w3-hover-black" href="#">2</a>
+      <a class="w3-button w3-hover-black" href="#">3</a>
+      <a class="w3-button w3-hover-black" href="#">4</a>
+      <a class="w3-button w3-hover-black" href="#">5</a>
+      <a class="w3-button w3-hover-black" href="#">»</a>
+    </div>
+  </div>
+  -->
+
+		<footer id="myFooter">
+			<div class="w3-container w3-theme-l2 w3-padding-32">
+				<h4>Quản Lý Tour Du Lịch - Nhóm 22 - 𝕷𝖎𝖌𝖍𝖙𝖓𝖎𝖓𝖌
+					𝕿𝖍𝖎𝖊𝖛𝖊𝖘</h4>
+			</div>
+
+			<div class="w3-container w3-theme-l1">
+				<p>
+					Tài trợ bởi <a href="https://www.w3schools.com/w3css/default.asp"
+						target="_blank">w3.css</a>
+				</p>
+			</div>
+		</footer>
+
+		<!-- END MAIN -->
+	</div>
+
+	<script>
+		// Get the Sidebar
+		var mySidebar = document.getElementById("mySidebar");
+
+		// Get the DIV with overlay effect
+		var overlayBg = document.getElementById("myOverlay");
+
+		// Toggle between showing and hiding the sidebar, and add overlay effect
+		function w3_open() {
+			if (mySidebar.style.display === 'block') {
+				mySidebar.style.display = 'none';
+				overlayBg.style.display = "none";
+			} else {
+				mySidebar.style.display = 'block';
+				overlayBg.style.display = "block";
+			}
+		}
+
+		// Close the sidebar with the close button
+		function w3_close() {
+			mySidebar.style.display = "none";
+			overlayBg.style.display = "none";
+		}
+	</script>
+
+</body>
+</html>
