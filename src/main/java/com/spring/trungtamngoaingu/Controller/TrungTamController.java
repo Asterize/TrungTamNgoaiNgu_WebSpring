@@ -14,12 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.spring.trungtamngoaingu.Wrapper.DuThiModelWrapper;
+import com.spring.trungtamngoaingu.Wrapper.KhoaThiModelWrapper;
+import com.spring.trungtamngoaingu.Wrapper.PhongThiModelWrapper;
 import com.spring.trungtamngoaingu.Wrapper.ThiSinhModelWrapper;
 import com.spring.trungtamngoaingu.Wrapper.ThongTinThiSinh_Thi_ModelWrapper;
 
 import DAL.DuThiDAL;
 import Model.DiemThiModel;
 import Model.DuThiModel;
+import Model.KhoaThiModel;
 import Model.PhongThiModel;
 import Model.ThiSinhModel;
 
@@ -36,6 +40,7 @@ import Model.ThiSinhModel;
 @Controller
 public class TrungTamController {
 	private ArrayList<ThiSinhModel> allThiSinhs = new ArrayList<>();
+	private ArrayList<PhongThiModel> allPhongs = new ArrayList<>();
 
 //	private ArrayList<GiaTourModel> list_gia;
 //	private ArrayList<ThamQuanModel> list_thamQuan;
@@ -49,8 +54,10 @@ public class TrungTamController {
 //
 	public TrungTamController() {
 		ThiSinhModel thiSinhModel = new ThiSinhModel();
+		PhongThiModel phongThiModel = new PhongThiModel();
 		try {
 			this.allThiSinhs = thiSinhModel.getAllThiSinh();
+			this.allPhongs = phongThiModel.getAllPhongThi();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -59,15 +66,16 @@ public class TrungTamController {
 
 //
 	@RequestMapping("/TraCuu")
-	public String tours(Model model) {
+	public String traCuuPage(Model model) {
 		ThiSinhModelWrapper wrapper = new ThiSinhModelWrapper();
 		wrapper.setThiSinhList(allThiSinhs);
 		model.addAttribute("allThiSinhs", wrapper);
 		return "traCuu";
 	}
 
-	@RequestMapping(value = "/TraCuu/LookUpByNameAndPhone", method = RequestMethod.POST)
-	public String themDiaDiem(Model model, String userName, String userPhone) {
+	@RequestMapping(value = "/TraCuu/LookUpByNameAndPhone/{userName}/{userPhone}", method = RequestMethod.POST)
+	public String traCuuThongTinThiSinh(Model model, @PathVariable("userName") String userName, 
+			@PathVariable("userPhone")String userPhone) {
 		ThiSinhModelWrapper wrapper = new ThiSinhModelWrapper();
 		ArrayList<ThiSinhModel> ketQuaTraCuu = new ArrayList<>();
 
@@ -83,7 +91,7 @@ public class TrungTamController {
 			ArrayList<PhongThiModel> ketQuaPhongThi = new ArrayList<>();
 			ArrayList<ArrayList<DiemThiModel>> ketQuaDiemThi = new ArrayList<>();
 			HashMap<String, String> mapPhong_SBD = wrapper.getMaPhongVaSBD(ketQuaTraCuu);
-			
+
 			for (Entry<String, String> entry : mapPhong_SBD.entrySet()) {
 				String maPhong = entry.getKey();
 				String soBaoDanh = entry.getValue();
@@ -96,16 +104,17 @@ public class TrungTamController {
 			}
 
 			ThongTinThiSinh_Thi_ModelWrapper wrapper_traCuu = new ThongTinThiSinh_Thi_ModelWrapper();
+			wrapper.setThiSinhList(ketQuaTraCuu);
 			wrapper_traCuu.setDiemThiList(ketQuaDiemThi);
 			wrapper_traCuu.setPhongThiList(ketQuaPhongThi);
 			model.addAttribute("ketQuaTraCuu", wrapper_traCuu);
+			model.addAttribute("thiSinhResult", wrapper.getThiSinhList().get(0));
 		}
-		
+
 		if (model.containsAttribute("ketQuaTraCuu")) {
 			model.addAttribute("coKetQua", true);
-		}
-		else {
-			model.addAttribute("coKetQua", false);	
+		} else {
+			model.addAttribute("coKetQua", false);
 		}
 		model.addAttribute("userName", userName);
 		model.addAttribute("userPhone", userPhone);
@@ -263,53 +272,51 @@ public class TrungTamController {
 //		return new RedirectView("/tours/" + maTour);
 //	}
 //
-//	@RequestMapping(value = "/tours/{idTour}", method = RequestMethod.GET)
-//	public String chiTietTour(Model model, @PathVariable("idTour") String idTour) {
-//		try {
-//			TourDAL tourDAL = new TourDAL();
-//			tourHienTai = tourDAL.getAllTours("MaTour='" + idTour + "'", null).get(0);
-//
-//			// Giá
-//			GiaTourModelWrapper wrapper_GiaTour = new GiaTourModelWrapper();
-//			list_gia = giaTour.getGiaByMaTour(idTour);
-//			wrapper_GiaTour.setGiaTourList(list_gia);
-//
-//			// Loại hình
-//			LoaiHinhModelWrapper wrapper_LoaiHinh = new LoaiHinhModelWrapper();
-//			list_loaiHinh = loaiHinh.getAllLoaiHinh();
-//			wrapper_LoaiHinh.setLoaiHinhList(list_loaiHinh);
-//			for (Iterator<LoaiHinhModel> iterator = list_loaiHinh.iterator(); iterator.hasNext();) {
-//				LoaiHinhModel loaiHinh = (LoaiHinhModel) iterator.next();
-//				if (loaiHinh.getMaLoaiHinh().equals(tourHienTai.getMaLoaiHinh())) {
-//					tourHienTai.setLoaiHinh(loaiHinh);
-//					break;
-//				}
-//			}
-//
-//			// Lịch trình tham quan
-//			ThamQuanModelWrapper wrapper_ThamQuan = new ThamQuanModelWrapper();
-//			list_thamQuan = thamQuan.getThamQuanByMaTour(tourHienTai.getMaTour());
-//			wrapper_ThamQuan.setThamQuanList(list_thamQuan);
-//
-//			// Địa điểm tham quan
-//			DiaDiemDAL diaDiemDAL = new DiaDiemDAL();
-//			list_diaDiem = diaDiemDAL.getDiaDiem(null, null);
-//			DiaDiemModelWrapper wrapper_DD = new DiaDiemModelWrapper();
-//			wrapper_DD.setDiaDiemList(list_diaDiem);
-//
-//			// set model
-//			model.addAttribute("tourHienTai", tourHienTai);
-//			model.addAttribute("wrapperGia", wrapper_GiaTour);
-//			model.addAttribute("wrapperLH", wrapper_LoaiHinh);
-//			model.addAttribute("wrapperThamQuan", wrapper_ThamQuan);
-//			model.addAttribute("wrapperDiaDiem", wrapper_DD);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//		return "chitiettour";
-//	}
+	@RequestMapping(value = "/XemDanhSachThiSinhTheoPhong", method = RequestMethod.GET)
+	public String xemDanhSachTheoPhongVaKhoaPage(Model model) {
+		try {
+			PhongThiModelWrapper phong_Wrapper = new PhongThiModelWrapper();
+			phong_Wrapper.setPhongThiList(allPhongs);
+
+			KhoaThiModelWrapper khoa_Wrapper = new KhoaThiModelWrapper();
+			ArrayList<KhoaThiModel> khoaThiList = new ArrayList<>();
+			khoa_Wrapper.setKhoaThiList(khoaThiList);
+
+			for (PhongThiModel phong : phong_Wrapper.getPhongThiList()) {
+				if (!khoa_Wrapper.checkDuplicate(phong.getMaKT())) {
+					khoa_Wrapper.getKhoaThiList().add(new KhoaThiModel().getKTByMa(phong.getMaKT()));
+				}
+			}
+			model.addAttribute("allPhongs", phong_Wrapper);
+			model.addAttribute("allKhoas", khoa_Wrapper);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		boolean coDanhSachPhong = model.containsAttribute("allPhongs");
+		boolean coDanhSachKhoa = model.containsAttribute("allKhoas");
+		model.addAttribute("coDanhSachPhong", coDanhSachPhong);
+		model.addAttribute("coDanhSachKhoa", coDanhSachKhoa);
+		return "xemDanhSachThiSinh";
+	}
+
+	@RequestMapping(value = "/XemDanhSachThiSinhTheoPhong/TraCuu", method = RequestMethod.POST)
+	public String traCuuDanhSachCuaPhong_Khoa(Model model, String comboKhoaThi, String comboPhongThi) {
+		DuThiModelWrapper duThi_wrapper = new DuThiModelWrapper();
+		DuThiDAL duThiDAL = new DuThiDAL();
+		try {
+			ArrayList<DuThiModel> listDuThi = duThiDAL.getAllDT("MaPhongThi='" + comboPhongThi + "'", null);
+			duThi_wrapper.setDuThiList(listDuThi);
+			model.addAttribute("listThiSinh", duThi_wrapper);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		boolean coKetQua = model.containsAttribute("listThiSinh");
+		model.addAttribute("coKetQua", coKetQua);
+		return "ketQuaDanhSachThiSinh";
+	}
+
 //
 	@RequestMapping("/")
 	public String index() {

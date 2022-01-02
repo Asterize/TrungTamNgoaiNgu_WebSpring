@@ -8,6 +8,9 @@
 <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
 <style>
 .w3-sidebar {
 	z-index: 3;
@@ -117,15 +120,19 @@ wrapper {
 		<div class="w3-row w3-padding-64 center-table">
 
 			<h1 class="w3-text-teal">Tra cứu thông tin thí sinh</h1>
-			<form th:action="@{/TraCuu/LookUpByNameAndPhone}" method="post">
+			<form id="myForm" th:action="@{/TraCuu/LookUpByNameAndPhone}"
+				method="post">
 				<ul class="wrapper">
-					<li class="form-row"><label for="userName" style="text-align: end;">Nhập họ tên
-							thí sinh: </label><input type="text" name="userName"></li>
+					<li class="form-row"><label for="userName"
+						style="text-align: end;">Nhập họ tên thí sinh: </label><input
+						id="inputName" type="text" name="userName"></li>
 
-					<li class="form-row"><label for="userPhone" style="text-align: end;">Nhập số
-							điện thoại: </label> <input type="text" name="userPhone"></li>
-					<li class="form-row" style="justify-content:center;">
-						<input style="flex-grow:initial;flex-basis:32.5%" type="submit" value="Tra cứu"></li>
+					<li class="form-row"><label for="userPhone"
+						style="text-align: end;">Nhập số điện thoại: </label> <input
+						id="inputPhone" type="text" name="userPhone"></li>
+					<li class="form-row" style="justify-content: center;"><input
+						style="flex-grow: initial; flex-basis: 32.5%" type="submit"
+						value="Tra cứu"></li>
 				</ul>
 			</form>
 
@@ -133,6 +140,22 @@ wrapper {
 	</div>
 
 	<script>
+		var $form = $('#myForm');
+		var $idName = $("#inputName");
+		var $idPhone = $("#inputPhone");
+
+		$form.submit(function(event) {
+
+			// respects th:action="@{/mycontroller/}" and appends id
+			$form.attr('action', $form.attr('action') + "/" + $idName.val()
+					+ "/" + $idPhone.val());
+
+			// otherwise ?id=xx
+			$idField.prop("disabled", true);
+
+			// submits the form in the normal way !
+			return;
+		});
 		// Get the Sidebar
 		var mySidebar = document.getElementById("mySidebar");
 

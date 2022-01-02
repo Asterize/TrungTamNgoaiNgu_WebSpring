@@ -17,14 +17,36 @@
 	height: inherit;
 }
 
-th, td {
-	padding: 8px;
+wrapper {
+	background-color: whitesmoke;
+	list-style-type: none;
+	padding: 0;
+	border-radius: 3px;
 }
-.row-33 {
-	width:80%;
-	display:flex;
-	justify-content:space-evenly;
-	font-size: 1.3rem;
+
+.form-row {
+	display: flex;
+	justify-content: flex-end;
+	padding: .5em;
+}
+
+.form-row>label {
+	padding: .5em 1em .5em 0;
+	flex: 1;
+}
+
+.form-row>input {
+	flex: 5;
+}
+
+.form-row>input, .form-row>button {
+	padding: .5em;
+}
+
+.form-row>button {
+	background: gray;
+	color: white;
+	border: 0;
 }
 </style>
 <body>
@@ -93,80 +115,23 @@ th, td {
 	<div class="w3-main" style="margin-left: 280px">
 
 		<div class="w3-row w3-padding-64 center-table">
-
-			<h1 class="w3-text-teal">
-				Tra cứu thông tin thí sinh: <span
-					th:text="${userName} +', số điện thoại ' + ${userPhone}"></span>
-			</h1>
-			<div class="row-33">
-				<span th:text="'Giới tính: '+${thiSinhResult.getGioiTinh()}"></span>&nbsp;&nbsp;&nbsp;&nbsp;
-				<span th:text="'Ngày Sinh: '+${ketQuaTraCuu.convertDateVietNam(thiSinhResult.getNgaySinh())}"></span>&nbsp;&nbsp;&nbsp;&nbsp;
-				<span th:text="'Nơi sinh: '+${thiSinhResult.getNoiSinh()}"></span>
-			</div>
-			<div class="row-33">
-				<span th:text="'CMND: '+${thiSinhResult.getCMND()}"></span>&nbsp;&nbsp;&nbsp;&nbsp;
-				<span th:text="'Nơi cấp: '+${thiSinhResult.getNoiCap()}"></span>&nbsp;&nbsp;&nbsp;&nbsp;
-				<span th:text="'Ngày cấp: '+${ketQuaTraCuu.convertDateVietNam(thiSinhResult.getNgayCap())}"></span>
-			</div>
-			
-			
-			<div th:if="${!coKetQua}">
-				<p>Không tìm được kết quả bạn nhập. Mời bạn thử lại!</p>
-			</div>
-			<div th:if="${coKetQua}">
-				<!-- 					<p>Có kết quả trả về.</p> -->
-				<h4>Phòng thi</h4>
-				<table class="table table-bordered table-hover table-striped"
-					border="1">
-					<thead>
-						<tr>
-							<!-- 							<th>Mã Phòng Thi</th> -->
-							<th>Tên Phòng Thi</th>
-							<th>Số Lượng</th>
-							<th>Trình Độ</th>
-							<th>Mã Khóa Thi</th>
-							<th>Tên Khóa Thi</th>
-							<th>Ngày Thi</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="phong, stat : ${ketQuaTraCuu.getPhongThiList()}">
-
-							<!-- 							<td style="text-align: center;" th:text='${phong.getMaPhong()}'></td> -->
-							<td style="text-align: center;" th:text="${phong.getTenPhong()}"></td>
-							<td style="text-align: center;" th:text="${phong.getSoLuong()}"></td>
-							<td style="text-align: center;"
-								th:text="${phong.getTenTrinhDo()}"></td>
-							<td style="text-align: center;" th:text="${phong.getMaKT()}"></td>
-							<td style="text-align: center;" th:text="${phong.getKhoaThiByMaKT()?.getTenKhoaThi()}"></td>
-							<td style="text-align: center;" th:text="${ketQuaTraCuu.convertDateVietNam(phong.getKhoaThiByMaKT()?.getNgayThi())}"></td>
-						</tr>
-					</tbody>
-				</table>
-
-				<h4>Kết quả thi - theo thứ tự khoá thi ở bảng trên</h4>
-				<div th:each="listDiem : ${ketQuaTraCuu.getDiemThiList()}">
-					<table class="table table-bordered table-hover table-striped"
-						border="1">
-						<thead>
-							<tr>
-								<!-- 							<th>Mã Phòng Thi</th> -->
-								<th>Tên Phần Thi</th>
-								<th>Điểm</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="kq, stat : ${listDiem}">
-
-								<!-- 							<td style="text-align: center;" th:text='${phong.getMaPhong()}'></td> -->
-								<td style="text-align: center;" th:text="${kq.getTenPhanThi()}"></td>
-								<td style="text-align: center;" th:text="${kq.getDiem()}"></td>
-
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
+			<h1 class="w3-text-teal">Xem danh sách thí sinh theo phòng thi
+				và khóa thi</h1>
+			<form th:action="@{/XemDanhSachThiSinhTheoPhong/TraCuu}" method="post">
+				<label for="comboPhongThi">Danh sách phòng thi:</label>&nbsp;&nbsp;
+				<select name="comboPhongThi">
+					<option th:each="phong : ${allPhongs.getPhongThiList()}"
+						th:value="${phong.getMaPhong()}" th:text="${phong.getTenPhong()}"></option>
+				</select><br> <br>
+				 
+				<label for="comboKhoaThi">Danh sách khóa thi:</label>&nbsp;&nbsp; 
+				<select name="comboKhoaThi">
+					<option th:each="khoa : ${allKhoas.getKhoaThiList()}"
+						th:value="${khoa.getMaKhoaThi()}"
+						th:text="${khoa.getTenKhoaThi()}"></option>
+				</select> <br> <br> <input style="padding: 8px;" type="submit"
+					value="Tra cứu">
+			</form>
 
 		</div>
 	</div>
