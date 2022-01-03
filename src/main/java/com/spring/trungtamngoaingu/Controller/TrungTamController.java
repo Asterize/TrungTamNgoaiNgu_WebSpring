@@ -1,18 +1,13 @@
 package com.spring.trungtamngoaingu.Controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map.Entry;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.spring.trungtamngoaingu.Wrapper.DuThiModelWrapper;
 import com.spring.trungtamngoaingu.Wrapper.KhoaThiModelWrapper;
@@ -21,6 +16,7 @@ import com.spring.trungtamngoaingu.Wrapper.ThiSinhModelWrapper;
 import com.spring.trungtamngoaingu.Wrapper.ThongTinThiSinh_Thi_ModelWrapper;
 
 import DAL.DuThiDAL;
+import Model.DangKyModel;
 import Model.DiemThiModel;
 import Model.DuThiModel;
 import Model.KhoaThiModel;
@@ -64,6 +60,18 @@ public class TrungTamController {
 		}
 	}
 
+	private void refreshAllList() {
+		try {
+			ThiSinhModel thiSinhModel = new ThiSinhModel();
+			PhongThiModel phongThiModel = new PhongThiModel();
+			this.allThiSinhs = thiSinhModel.getAllThiSinh();
+			this.allPhongs = phongThiModel.getAllPhongThi();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 //
 	@RequestMapping("/TraCuu")
 	public String traCuuPage(Model model) {
@@ -74,8 +82,9 @@ public class TrungTamController {
 	}
 
 	@RequestMapping(value = "/TraCuu/LookUpByNameAndPhone/{userName}/{userPhone}", method = RequestMethod.POST)
-	public String traCuuThongTinThiSinh(Model model, @PathVariable("userName") String userName, 
-			@PathVariable("userPhone")String userPhone) {
+	public String traCuuThongTinThiSinh(Model model, @PathVariable("userName") String userName,
+			@PathVariable("userPhone") String userPhone) {
+		refreshAllList();
 		ThiSinhModelWrapper wrapper = new ThiSinhModelWrapper();
 		ArrayList<ThiSinhModel> ketQuaTraCuu = new ArrayList<>();
 
@@ -274,6 +283,7 @@ public class TrungTamController {
 //
 	@RequestMapping(value = "/XemDanhSachThiSinhTheoPhong", method = RequestMethod.GET)
 	public String xemDanhSachTheoPhongVaKhoaPage(Model model) {
+		refreshAllList();
 		try {
 			PhongThiModelWrapper phong_Wrapper = new PhongThiModelWrapper();
 			phong_Wrapper.setPhongThiList(allPhongs);
@@ -302,6 +312,7 @@ public class TrungTamController {
 
 	@RequestMapping(value = "/XemDanhSachThiSinhTheoPhong/TraCuu", method = RequestMethod.POST)
 	public String traCuuDanhSachCuaPhong_Khoa(Model model, String comboKhoaThi, String comboPhongThi) {
+		refreshAllList();
 		DuThiModelWrapper duThi_wrapper = new DuThiModelWrapper();
 		DuThiDAL duThiDAL = new DuThiDAL();
 		try {
@@ -315,6 +326,78 @@ public class TrungTamController {
 		boolean coKetQua = model.containsAttribute("listThiSinh");
 		model.addAttribute("coKetQua", coKetQua);
 		return "ketQuaDanhSachThiSinh";
+	}
+
+	@RequestMapping(value = "/ThongKe", method = RequestMethod.GET)
+	public String thongKePage(Model model) {
+		refreshAllList();
+		try {
+			KhoaThiModelWrapper khoa_Wrapper = new KhoaThiModelWrapper();
+			KhoaThiModel khoaModel = new KhoaThiModel();
+			ArrayList<KhoaThiModel> allKT = khoaModel.getAllKT();
+			khoa_Wrapper.setKhoaThiList(allKT);
+			model.addAttribute("allKhoas", khoa_Wrapper);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "thongKe";
+	}
+
+	@RequestMapping(value = "/ThongKe/KetQua", method = RequestMethod.POST)
+	public String thongKe_KetQua(Model model, String comboKhoaThi, String comboTrinhDo) {
+		refreshAllList();
+		int soLuongPhong = 0;
+//		int soLuongKhoa = 0;
+		int soLuongThiSinh = 0;
+		try {
+			KhoaThiModelWrapper khoa_Wrapper = new KhoaThiModelWrapper();
+
+			// Thống kê phòng
+			for (PhongThiModel phong : allPhongs) {
+				if (phong.getMaKT().equals(comboKhoaThi)) {
+					if (phong.getTenTrinhDo().equals(comboTrinhDo)) {
+						soLuongPhong++;
+					}
+				}
+			}
+
+			// Thống kê khóa
+//			KhoaThiModel khoaModel = new KhoaThiModel();
+//			ArrayList<KhoaThiModel> allKT = khoaModel.getAllKT();
+//			soLuongKhoa = allKT.size();
+//			khoa_Wrapper.setKhoaThiList(allKT);
+//			model.addAttribute("allKhoas", khoa_Wrapper);
+
+			// Thống kê thí sinh theo trình độ
+			DangKyModel dangKyModel = new DangKyModel();
+			ArrayList<DangKyModel> allDK = dangKyModel.getAllDK();
+			for (DangKyModel dangKy : allDK) {
+				if (dangKy.getMaKT().equals(comboKhoaThi)) {
+					if (dangKy.getTenTrinhDo().equals(comboTrinhDo)) {
+						soLuongThiSinh++;
+					}
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		KhoaThiModel khoaThiModel = new KhoaThiModel();
+		try {
+			KhoaThiModel ktByMa = khoaThiModel.getKTByMa(comboKhoaThi);
+			model.addAttribute("KhoaThi", ktByMa.getTenKhoaThi());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		model.addAttribute("TrinhDo", comboTrinhDo);
+
+		model.addAttribute("SLPhong", soLuongPhong);
+//		model.addAttribute("SLKhoa", soLuongKhoa);
+		model.addAttribute("SLThiSinh", soLuongThiSinh);
+		return "thongKe_KetQua";
 	}
 
 //
