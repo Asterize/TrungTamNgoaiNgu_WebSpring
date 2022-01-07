@@ -166,14 +166,21 @@ wrapper {
 									th:text="${khoa.getMaKhoaThi()}"></option>
 						</select></li>
 
-						<li class="form-row">Tên khóa thi:&nbsp;<span id="tenKhoaThi" th:text="${tenKhoaThiDefault}"></span>
-						</li>
-						<li class="form-row">Ngày thi:&nbsp;<span id="ngayKhoaThi" th:text="${ngayKhoaThiDefault}"></span></li>
+						<li class="form-row">Tên khóa thi:&nbsp;<span id="tenKhoaThi"
+							th:text="${tenKhoaThiDefault}"></span></li>
 
+						<li class="form-row">Ngày thi:&nbsp;<span id="ngayKhoaThi"
+							th:text="${ngayKhoaThiDefault}"></span></li>
 
-						<!-- 					<li class="form-row" style="justify-content: center;"><input -->
-						<!-- 						style="flex-grow: initial; flex-basis: 32.5%" type="submit" -->
-						<!-- 						value="Tra cứu"></li> -->
+						<li class="form-row"><label for="comboTrinhDo"
+							style="flex: unset;">Trình độ dự thi:</label>&nbsp;&nbsp; <select
+							name="comboTrinhDo">
+								<option value="A2">A2</option>
+								<option value="B1">B1</option>
+						</select></li>
+						<li class="form-row" style="justify-content: center;"><input
+							style="flex-grow: initial; flex-basis: 32.5%" type="submit"
+							value="Đăng Ký"></li>
 					</ul>
 				</form>
 			</div>
@@ -192,7 +199,7 @@ wrapper {
 			const ngay = split[2].split("-");
 			spanNgay.textContent = ngay[2] + "-" + ngay[1] + "-" + ngay[0];
 		});
-		
+
 		// Get the Sidebar
 		var mySidebar = document.getElementById("mySidebar");
 

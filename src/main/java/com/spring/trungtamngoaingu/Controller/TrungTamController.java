@@ -435,7 +435,7 @@ public class TrungTamController {
 			model.addAttribute("thiSinhDangKy", thiSinhTheoCMND);
 		} else {
 			String[] dateSinh = ngaySinh.split("-");
-			String[] dateCap = ngaySinh.split("-");
+			String[] dateCap = ngayCap.split("-");
 			if (dateSinh.length == 3 && dateCap.length == 3) {
 				int year = Integer.parseInt(dateSinh[0]);
 				int month = Integer.parseInt(dateSinh[1]);
