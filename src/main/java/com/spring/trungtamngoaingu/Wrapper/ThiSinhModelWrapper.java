@@ -1,5 +1,7 @@
 package com.spring.trungtamngoaingu.Wrapper;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import DAL.BaiThiDAL;
@@ -86,6 +88,11 @@ public class ThiSinhModelWrapper {
 		}
 
 		return null;
+	}
+	
+	public String convertDateVietNam(LocalDate date) {
+		String formattedDate = date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		return formattedDate;
 	}
 
 }

@@ -8,6 +8,9 @@
 <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
 <style>
 .w3-sidebar {
 	z-index: 3;
@@ -17,14 +20,36 @@
 	height: inherit;
 }
 
-th, td {
-	padding: 8px;
+wrapper {
+	background-color: whitesmoke;
+	list-style-type: none;
+	padding: 0;
+	border-radius: 3px;
 }
-.row-33 {
-	width:80%;
-	display:flex;
-	justify-content:space-evenly;
-	font-size: 1.3rem;
+
+.form-row {
+	display: flex;
+	justify-content: flex-end;
+	padding: .5em;
+}
+
+.form-row>label {
+	padding: .5em 1em .5em 0;
+	flex: 1;
+}
+
+.form-row>input {
+	flex: 5;
+}
+
+.form-row>input, .form-row>button {
+	padding: .5em;
+}
+
+.form-row>button {
+	background: gray;
+	color: white;
+	border: 0;
 }
 </style>
 <body>
@@ -94,83 +119,56 @@ th, td {
 
 		<div class="w3-row w3-padding-64 center-table">
 
-			<h1 class="w3-text-teal">
-				Tra cứu thông tin thí sinh: <span
-					th:text="${userName} +', số điện thoại ' + ${userPhone}"></span>
-			</h1>
-			
-			<div th:if="${!coKetQua}">
-				<p>Không tìm được kết quả bạn nhập. Mời bạn thử lại!</p>
-			</div>
-			<div th:if="${coKetQua}">
-				<div class="row-33">
-					<span th:text="'Giới tính: '+${thiSinhResult.getGioiTinh()}"></span>&nbsp;&nbsp;&nbsp;&nbsp;
-					<span th:text="'Ngày Sinh: '+${ketQuaTraCuu.convertDateVietNam(thiSinhResult.getNgaySinh())}"></span>&nbsp;&nbsp;&nbsp;&nbsp;
-					<span th:text="'Nơi sinh: '+${thiSinhResult.getNoiSinh()}"></span>
-				</div>
-				<div class="row-33">
-					<span th:text="'CMND: '+${thiSinhResult.getCMND()}"></span>&nbsp;&nbsp;&nbsp;&nbsp;
-					<span th:text="'Nơi cấp: '+${thiSinhResult.getNoiCap()}"></span>&nbsp;&nbsp;&nbsp;&nbsp;
-					<span th:text="'Ngày cấp: '+${ketQuaTraCuu.convertDateVietNam(thiSinhResult.getNgayCap())}"></span>
-				</div>
-				<!-- 					<p>Có kết quả trả về.</p> -->
-				<h4>Phòng thi</h4>
-				<table class="table table-bordered table-hover table-striped"
-					border="1">
-					<thead>
-						<tr>
-							<!-- 							<th>Mã Phòng Thi</th> -->
-							<th>Tên Phòng Thi</th>
-							<th>Số Lượng</th>
-							<th>Trình Độ</th>
-							<th>Mã Khóa Thi</th>
-							<th>Tên Khóa Thi</th>
-							<th>Ngày Thi</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="phong, stat : ${ketQuaTraCuu.getPhongThiList()}">
+			<h1 class="w3-text-teal">Điền thông tin thí sinh để đăng ký (nếu đã đăng ký ở khóa trước chỉ cần CMND)</h1>
+			<form id="myForm" th:action="@{/DangKyThi/DangKyKhoaThi}" method="post">
+				<ul class="wrapper">
+					<li class="form-row"><label for="CMND"
+						style="text-align: end;">CMND/CCCD: </label><input required
+						type="text" name="CMND"></li>
+						
+					<li class="form-row"><label for="ngayCap"
+						style="text-align: end;">Ngày cấp: </label><input type="date" name="ngayCap"></li>
+						
+					<li class="form-row"><label for="noiCap"
+						style="text-align: end;">Nơi cấp: </label><input name="noiCap" ></li>
+						
+					<li class="form-row"><label for="userName"
+						style="text-align: end;">Nhập họ tên: </label><input
+						type="text" name="userName"></li>
+						
+					<li class="form-row" style="justify-content: center;margin-right: 63.5%;"><label for="gioiTinh"
+						style="flex-grow:0;">Giới tính: </label>
+						<select name="gioiTinh">
+							<option value="Nam">Nam</option>
+							<option value="Nữ">Nữ</option>
+						</select>
+					</li>
+					
+					<li class="form-row"><label for="ngaySinh"
+						style="text-align: end;">Ngày sinh: </label><input type="date" name="ngaySinh"></li>
+						
+					<li class="form-row"><label for="noiSinh"
+						style="text-align: end;">Nơi sinh: </label><input name="noiSinh"></li>
 
-							<!-- 							<td style="text-align: center;" th:text='${phong.getMaPhong()}'></td> -->
-							<td style="text-align: center;" th:text="${phong.getTenPhong()}"></td>
-							<td style="text-align: center;" th:text="${phong.getSoLuong()}"></td>
-							<td style="text-align: center;"
-								th:text="${phong.getTenTrinhDo()}"></td>
-							<td style="text-align: center;" th:text="${phong.getMaKT()}"></td>
-							<td style="text-align: center;" th:text="${phong.getKhoaThiByMaKT()?.getTenKhoaThi()}"></td>
-							<td style="text-align: center;" th:text="${ketQuaTraCuu.convertDateVietNam(phong.getKhoaThiByMaKT()?.getNgayThi())}"></td>
-						</tr>
-					</tbody>
-				</table>
-
-				<h4>Kết quả thi - theo thứ tự khoá thi ở bảng trên</h4>
-				<div th:each="listDiem : ${ketQuaTraCuu.getDiemThiList()}">
-					<table class="table table-bordered table-hover table-striped"
-						border="1">
-						<thead>
-							<tr>
-								<!-- 							<th>Mã Phòng Thi</th> -->
-								<th>Tên Phần Thi</th>
-								<th>Điểm</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="kq, stat : ${listDiem}">
-
-								<!-- 							<td style="text-align: center;" th:text='${phong.getMaPhong()}'></td> -->
-								<td style="text-align: center;" th:text="${kq.getTenPhanThi()}"></td>
-								<td style="text-align: center;" th:text="${kq.getDiem()}"></td>
-
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
+					<li class="form-row"><label for="userPhone"
+						style="text-align: end;">Số điện thoại: </label> <input
+						type="text" name="userPhone"></li>
+						
+					<li class="form-row"><label for="email"
+						style="text-align: end;">Email: </label> <input
+						type="text" name="email"></li>
+						
+					<li class="form-row" style="justify-content: center;"><input
+						style="flex-grow: initial; flex-basis: 32.5%" type="submit"
+						value="Tra cứu"></li>
+				</ul>
+			</form>
 
 		</div>
 	</div>
 
 	<script>
+
 		// Get the Sidebar
 		var mySidebar = document.getElementById("mySidebar");
 

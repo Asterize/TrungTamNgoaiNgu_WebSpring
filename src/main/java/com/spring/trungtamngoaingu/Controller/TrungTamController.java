@@ -1,5 +1,6 @@
 package com.spring.trungtamngoaingu.Controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -8,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.spring.trungtamngoaingu.Wrapper.DuThiModelWrapper;
 import com.spring.trungtamngoaingu.Wrapper.KhoaThiModelWrapper;
@@ -110,14 +112,21 @@ public class TrungTamController {
 
 				ketQuaPhongThi.add(thongTinPhongThi);
 				ketQuaDiemThi.add(thongTinBaiThi_Diem);
+				// Kiểm tra có điểm chưa
+				ketQuaDiemThi.get(0).removeIf(diem -> diem.getDiem() == -1);
 			}
 
 			ThongTinThiSinh_Thi_ModelWrapper wrapper_traCuu = new ThongTinThiSinh_Thi_ModelWrapper();
 			wrapper.setThiSinhList(ketQuaTraCuu);
 			wrapper_traCuu.setDiemThiList(ketQuaDiemThi);
 			wrapper_traCuu.setPhongThiList(ketQuaPhongThi);
-			model.addAttribute("ketQuaTraCuu", wrapper_traCuu);
-			model.addAttribute("thiSinhResult", wrapper.getThiSinhList().get(0));
+
+			if (wrapper.getThiSinhList() == null) {
+				model.addAttribute("thiSinhResult", null);
+			} else {
+				model.addAttribute("ketQuaTraCuu", wrapper_traCuu);
+				model.addAttribute("thiSinhResult", wrapper.getThiSinhList().get(0));
+			}
 		}
 
 		if (model.containsAttribute("ketQuaTraCuu")) {
@@ -407,6 +416,65 @@ public class TrungTamController {
 //		wrapper.setTourList(allTours);
 //		model.addAttribute("wrapper", wrapper);
 		return "index";
+	}
+
+	@RequestMapping("/DangKyThi")
+	public String dangKyDuThiPage(Model model) {
+//		ThiSinhModelWrapper wrapper = new ThiSinhModelWrapper();
+//		wrapper.setThiSinhList(allThiSinhs);
+//		model.addAttribute("allThiSinhs", wrapper);
+		return "dienThongTinDangKy"; // html
+	}
+
+	@RequestMapping("/DangKyThi/DangKyKhoaThi")
+	public String dangKyDuThi_TraCuu(Model model, String CMND, String ngayCap, String noiCap, String userName,
+			String gioiTinh, String ngaySinh, String noiSinh, String userPhone, String email) {
+		ThiSinhModel thiSinhModel = new ThiSinhModel();
+		ThiSinhModel thiSinhTheoCMND = thiSinhModel.getThiSinhTheoCMND(CMND);
+		if (thiSinhTheoCMND != null) {
+			model.addAttribute("thiSinhDangKy", thiSinhTheoCMND);
+		} else {
+			String[] dateSinh = ngaySinh.split("-");
+			String[] dateCap = ngaySinh.split("-");
+			if (dateSinh.length == 3 && dateCap.length == 3) {
+				int year = Integer.parseInt(dateSinh[0]);
+				int month = Integer.parseInt(dateSinh[1]);
+				int day = Integer.parseInt(dateSinh[2]);
+				LocalDate ngaySinhLD = LocalDate.of(year, month, day);
+
+				int yearCap = Integer.parseInt(dateCap[0]);
+				int monthCap = Integer.parseInt(dateCap[1]);
+				int dayCap = Integer.parseInt(dateCap[2]);
+				LocalDate ngayCapLD = LocalDate.of(yearCap, monthCap, dayCap);
+				
+				model.addAttribute("thiSinhDangKy", new ThiSinhModel(CMND, userName, gioiTinh, ngaySinhLD, noiSinh,
+						ngayCapLD, noiCap, userPhone, email));
+			}
+		}
+		model.addAttribute("HopLe", model.containsAttribute("thiSinhDangKy"));
+		
+		ThiSinhModelWrapper wrapper = new ThiSinhModelWrapper();
+		wrapper.setThiSinhList(allThiSinhs);
+		model.addAttribute("allThiSinhs", wrapper);
+		
+		KhoaThiModel khoaThiModel = new KhoaThiModel();
+		ArrayList<KhoaThiModel> listKhoaThi;
+		try {
+			listKhoaThi = khoaThiModel.getAllKT();
+			listKhoaThi.removeIf(kt -> kt.getNgayThi().isBefore(LocalDate.now()));
+			model.addAttribute("danhSachKhoaThi", listKhoaThi);
+			model.addAttribute("tenKhoaThiDefault", listKhoaThi.get(0).getTenKhoaThi());
+			model.addAttribute("ngayKhoaThiDefault", wrapper.convertDateVietNam(listKhoaThi.get(0).getNgayThi()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+        
+		
+		
+		
+		return "dangKyDuThi"; // html
 	}
 //
 //	@RequestMapping(value = "/tours/query/submitQuery", method = RequestMethod.POST)
