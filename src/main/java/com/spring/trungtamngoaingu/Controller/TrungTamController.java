@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.view.RedirectView;
-
+import static java.time.temporal.ChronoUnit.DAYS;
 import com.spring.trungtamngoaingu.Wrapper.DuThiModelWrapper;
 import com.spring.trungtamngoaingu.Wrapper.KhoaThiModelWrapper;
 import com.spring.trungtamngoaingu.Wrapper.PhongThiModelWrapper;
@@ -429,6 +429,7 @@ public class TrungTamController {
 	@RequestMapping("/DangKyThi/DangKyKhoaThi")
 	public String dangKyDuThi_TraCuu(Model model, String CMND, String ngayCap, String noiCap, String userName,
 			String gioiTinh, String ngaySinh, String noiSinh, String userPhone, String email) {
+		CMND = CMND.trim();
 		ThiSinhModel thiSinhModel = new ThiSinhModel();
 		ThiSinhModel thiSinhTheoCMND = thiSinhModel.getThiSinhTheoCMND(CMND);
 		if (thiSinhTheoCMND != null) {
@@ -446,17 +447,17 @@ public class TrungTamController {
 				int monthCap = Integer.parseInt(dateCap[1]);
 				int dayCap = Integer.parseInt(dateCap[2]);
 				LocalDate ngayCapLD = LocalDate.of(yearCap, monthCap, dayCap);
-				
+
 				model.addAttribute("thiSinhDangKy", new ThiSinhModel(CMND, userName, gioiTinh, ngaySinhLD, noiSinh,
 						ngayCapLD, noiCap, userPhone, email));
 			}
 		}
 		model.addAttribute("HopLe", model.containsAttribute("thiSinhDangKy"));
-		
+
 		ThiSinhModelWrapper wrapper = new ThiSinhModelWrapper();
 		wrapper.setThiSinhList(allThiSinhs);
 		model.addAttribute("allThiSinhs", wrapper);
-		
+
 		KhoaThiModel khoaThiModel = new KhoaThiModel();
 		ArrayList<KhoaThiModel> listKhoaThi;
 		try {
@@ -469,12 +470,88 @@ public class TrungTamController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-        
-		
-		
-		
+
 		return "dangKyDuThi"; // html
+	}
+
+	@RequestMapping("/DangKyThi/DangKyKhoaThi/NutDangKy")
+	public String dangKyDuThi_DangKy(Model model, String comboKhoaThi, String comboTrinhDo, String CMND, String ngayCap,
+			String noiCap, String hoTen, String gioiTinh, String ngaySinh, String noiSinh, String phone, String email) {
+		CMND = CMND.trim();
+		String[] value_array = comboKhoaThi.split("@");
+		if (value_array.length == 3) {
+			String maKhoaThiSelected = value_array[0];
+			KhoaThiModel khoaThiModel = new KhoaThiModel();
+			ArrayList<KhoaThiModel> listKhoaThi;
+			try {
+				listKhoaThi = khoaThiModel.getAllKT();
+				listKhoaThi.removeIf(kt -> kt.getNgayThi().isBefore(LocalDate.now()));
+				KhoaThiModel ktByMa = khoaThiModel.getKTByMa(maKhoaThiSelected);
+				long daysBetween = DAYS.between(LocalDate.now(), ktByMa.getNgayThi());
+
+				if (daysBetween <= 5) {
+					model.addAttribute("failure", "Đã hết hạn đăng ký khóa thi này!");
+				} else {
+					DangKyModel dangKyModel = new DangKyModel();
+					if (dangKyModel.checkExistsDangKy(maKhoaThiSelected, CMND)) {
+						model.addAttribute("failure",
+								"Người dùng đã đăng kí thi khóa thi này. Mời bạn thi lại vào tháng khác!");
+					}
+					// convert String to LocalDate
+					ThiSinhModel thiSinhModel = new ThiSinhModel();
+					ThiSinhModel ts = thiSinhModel.getThiSinhTheoCMND(CMND);
+					if (ts == null) { // Thí sinh chưa có trên Database
+						String[] dateSinh = ngaySinh.split("-");
+						String[] dateCap = ngayCap.split("-");
+						if (dateSinh.length == 3 && dateCap.length == 3) {
+							int year = Integer.parseInt(dateSinh[0]);
+							int month = Integer.parseInt(dateSinh[1]);
+							int day = Integer.parseInt(dateSinh[2]);
+							LocalDate ngaySinhLD = LocalDate.of(year, month, day);
+
+							int yearCap = Integer.parseInt(dateCap[0]);
+							int monthCap = Integer.parseInt(dateCap[1]);
+							int dayCap = Integer.parseInt(dateCap[2]);
+							LocalDate ngayCapLD = LocalDate.of(yearCap, monthCap, dayCap);
+
+							ThiSinhModel thiSinhDK = new ThiSinhModel(CMND, hoTen, gioiTinh, ngaySinhLD, noiSinh,
+									ngayCapLD, noiCap, phone, email);
+							thiSinhDK.addThiSinh();
+						}
+					} else { // Thí sinh đã có trên Database, đăng ký thi lại
+						String[] dateSinh = ngaySinh.split("-");
+						String[] dateCap = ngayCap.split("-");
+						if (dateSinh.length == 3 && dateCap.length == 3) {
+							int year = Integer.parseInt(dateSinh[0]);
+							int month = Integer.parseInt(dateSinh[1]);
+							int day = Integer.parseInt(dateSinh[2]);
+							LocalDate ngaySinhLD = LocalDate.of(year, month, day);
+
+							int yearCap = Integer.parseInt(dateCap[0]);
+							int monthCap = Integer.parseInt(dateCap[1]);
+							int dayCap = Integer.parseInt(dateCap[2]);
+							LocalDate ngayCapLD = LocalDate.of(yearCap, monthCap, dayCap);
+
+							ThiSinhModel thiSinhDK = new ThiSinhModel(CMND, hoTen, gioiTinh, ngaySinhLD, noiSinh,
+									ngayCapLD, noiCap, phone, email);
+							thiSinhDK.updateThiSinh();
+						}
+					}
+					DangKyModel dangKyModelMoi = new DangKyModel();
+					dangKyModelMoi.setCMND(CMND);
+					dangKyModelMoi.setMaKT(maKhoaThiSelected);
+					dangKyModelMoi.setTenTrinhDo(comboTrinhDo);
+					dangKyModelMoi.addDangKyThiSinh();
+					model.addAttribute("ketQua", "Đăng ký dự thi thành công");
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		model.addAttribute("thanhCong", !model.containsAttribute("failure"));
+		return "ketQuaDangKyDuThi"; // html
 	}
 //
 //	@RequestMapping(value = "/tours/query/submitQuery", method = RequestMethod.POST)

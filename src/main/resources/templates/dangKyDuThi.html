@@ -155,8 +155,8 @@ wrapper {
 						th:text="${thiSinhDangKy.getEmail()}"></span></li>
 
 				</ul>
-				<form id="myForm"
-					th:action="@{/DangKyThi/DangKyKhoaThi/XacNhanDangKy}" method="post">
+				<form id="myForm" th:action="@{/DangKyThi/DangKyKhoaThi/NutDangKy}"
+					method="post">
 					<ul class="wrapper">
 						<li class="form-row"><label for="comboKhoaThi"
 							style="flex: unset;">Danh sách khóa thi:</label>&nbsp;&nbsp; <select
@@ -178,9 +178,48 @@ wrapper {
 								<option value="A2">A2</option>
 								<option value="B1">B1</option>
 						</select></li>
+						
 						<li class="form-row" style="justify-content: center;"><input
 							style="flex-grow: initial; flex-basis: 32.5%" type="submit"
 							value="Đăng Ký"></li>
+						
+						<li class="form-row"><label for="CMND">
+							<input type="hidden" th:value="${thiSinhDangKy.getCMND()}" name="CMND">
+						</label></li>
+						
+						<li class="form-row"><label for="ngayCap">
+							<input type="hidden" th:value="${thiSinhDangKy.getNgayCap()?.toString()}" name="ngayCap">
+						</label></li>
+						
+						<li class="form-row"><label for="ngaySinh">
+							<input type="hidden" th:value="${thiSinhDangKy.getNgaySinh()?.toString()}" name="ngaySinh">
+						</label></li>
+						
+						<li class="form-row"><label for="noiCap">
+							<input type="hidden" th:value="${thiSinhDangKy.getNoiCap()}" name="noiCap">
+						</label></li>
+						
+						<li class="form-row"><label for="noiSinh">
+							<input type="hidden" th:value="${thiSinhDangKy.getNoiSinh()}" name="noiSinh">
+						</label></li>
+						
+						<li class="form-row"><label for="hoTen">
+							<input type="hidden" th:value="${thiSinhDangKy.getHoTen()}" name="hoTen">
+						</label></li>
+						
+						<li class="form-row"><label for="gioiTinh">
+							<input type="hidden" th:value="${thiSinhDangKy.getGioiTinh()}" name="gioiTinh">
+						</label></li>
+						
+						<li class="form-row"><label for="phone">
+							<input type="hidden" th:value="${thiSinhDangKy.getSDT()}" name="phone">
+						</label></li>
+						
+						<li class="form-row"><label for="email">
+							<input type="hidden" th:value="${thiSinhDangKy.getEmail()}" name="email">
+						</label></li>
+						
+						
 					</ul>
 				</form>
 			</div>

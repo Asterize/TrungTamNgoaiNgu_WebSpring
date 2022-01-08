@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<title>Trung Tâm Ngoại Ngữ</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" th:href="@{/images/favicon2.ico}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/theme.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+.w3-sidebar {
+	z-index: 3;
+	width: 280px;
+	top: 43px;
+	bottom: 0;
+	height: inherit;
+}
+
+th, td {
+	padding: 8px;
+}
+
+.row-33 {
+	width: 80%;
+	display: flex;
+	justify-content: space-evenly;
+	font-size: 1.3rem;
+}
+</style>
+<body>
+
+	<!-- Navbar -->
+	<div class="w3-top">
+		<div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+			<a
+				class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1"
+				href="javascript:void(0)" onclick="w3_open()"><i
+				class="fa fa-bars"></i></a> <a href="#"
+				class="w3-bar-item w3-button w3-theme-l1">Trung Tâm Ngoại Ngữ</a> <a
+				href="#" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Giới
+				thiệu</a>
+			<!-- 			<a href="#" -->
+			<!-- 				class="w3-bar-item w3-button w3-hide-small w3-hover-white">Values</a> -->
+			<!-- 			<a href="#" -->
+			<!-- 				class="w3-bar-item w3-button w3-hide-small w3-hover-white">News</a> -->
+			<!-- 			<a href="#" -->
+			<!-- 				class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a> -->
+			<!-- 			<a href="#" -->
+			<!-- 				class="w3-bar-item w3-button w3-hide-small w3-hide-medium w3-hover-white">Clients</a> -->
+			<!-- 			<a href="#" -->
+			<!-- 				class="w3-bar-item w3-button w3-hide-small w3-hide-medium w3-hover-white">Partners</a> -->
+		</div>
+	</div>
+
+	<!-- Sidebar -->
+	<nav
+		class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left"
+		id="mySidebar">
+		<a href="javascript:void(0)" onclick="w3_close()"
+			class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large"
+			title="Close Menu"> <i class="fa fa-remove"></i>
+		</a>
+		<h4 class="w3-bar-item">
+			<b>Danh sách chức năng</b>
+		</h4>
+		<a class="w3-bar-item w3-button w3-hover-black" href="/"> <img
+			th:src="@{/images/iconhome.png}" width="32" height="32"></img>&nbsp;Trang
+			chủ
+		</a> <a class="w3-bar-item w3-button w3-hover-black" href="/DangKyThi">
+			<img th:src="@{/images/icons8-plane-60.png}" width="32" height="32"></img>&nbsp;Đăng
+			ký dự thi trực tuyến
+		</a> <a class="w3-bar-item w3-button w3-hover-black" href="/TraCuu"> <img
+			th:src="@{/images/icons8-tour-guide-48.png}" width="32" height="32"></img>&nbsp;Tra
+			cứu thông tin thí sinh
+		</a> <a class="w3-bar-item w3-button w3-hover-black"
+			href="/XemChungNhanKetQuaThi"> <img
+			th:src="@{/images/icons8-employee-64.png}" width="32" height="32"></img>&nbsp;Xem
+			giấy chứng nhận kết quả thi
+		</a> <a class="w3-bar-item w3-button w3-hover-black"
+			href="/XemDanhSachThiSinhTheoPhong"> <img
+			th:src="@{/images/icons8-employee-64.png}" width="32" height="32"></img>&nbsp;Xem
+			danh sách thí sinh theo phòng
+		</a> <a class="w3-bar-item w3-button w3-hover-black" href="/ThongKe"><img
+			th:src="@{/images/chart-icon.png}" width="32" height="32"></img>&nbsp;Thống
+			kê theo trình độ</a>
+	</nav>
+
+	<!-- Overlay effect when opening sidebar on small screens -->
+	<div class="w3-overlay w3-hide-large" onclick="w3_close()"
+		style="cursor: pointer" title="close side menu" id="myOverlay"></div>
+
+	<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+	<div class="w3-main" style="margin-left: 280px">
+
+		<div class="w3-row w3-padding-64 center-table">
+
+			<h1 class="w3-text-teal">
+				Kết quả đăng ký dự thi	
+			</h1>
+
+			<div th:if="${!thanhCong}">
+				<span th:text="${failure}"></span>
+			</div>
+			<div th:if="${thanhCong}">
+				<span th:text="${ketQua}"></span>
+			</div>
+
+		</div>
+	</div>
+
+	<script>
+		// Get the Sidebar
+		var mySidebar = document.getElementById("mySidebar");
+
+		// Get the DIV with overlay effect
+		var overlayBg = document.getElementById("myOverlay");
+
+		// Toggle between showing and hiding the sidebar, and add overlay effect
+		function w3_open() {
+			if (mySidebar.style.display === 'block') {
+				mySidebar.style.display = 'none';
+				overlayBg.style.display = "none";
+			} else {
+				mySidebar.style.display = 'block';
+				overlayBg.style.display = "block";
+			}
+		}
+
+		// Close the sidebar with the close button
+		function w3_close() {
+			mySidebar.style.display = "none";
+			overlayBg.style.display = "none";
+		}
+	</script>
+
+</body>
+</html>
