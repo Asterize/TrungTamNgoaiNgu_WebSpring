@@ -1,8 +1,10 @@
 package com.spring.trungtamngoaingu.Controller;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,7 @@ import com.spring.trungtamngoaingu.Wrapper.ThiSinhModelWrapper;
 import com.spring.trungtamngoaingu.Wrapper.ThongTinThiSinh_Thi_ModelWrapper;
 
 import DAL.DuThiDAL;
+import Model.BaiThiModel;
 import Model.DangKyModel;
 import Model.DiemThiModel;
 import Model.DuThiModel;
@@ -40,16 +43,6 @@ public class TrungTamController {
 	private ArrayList<ThiSinhModel> allThiSinhs = new ArrayList<>();
 	private ArrayList<PhongThiModel> allPhongs = new ArrayList<>();
 
-//	private ArrayList<GiaTourModel> list_gia;
-//	private ArrayList<ThamQuanModel> list_thamQuan;
-//	private ArrayList<LoaiHinhModel> list_loaiHinh;
-//	private ArrayList<DiaDiemModel> list_diaDiem;
-//
-//	private TourModel tourHienTai = new TourModel();
-//	private GiaTourModel giaTour = new GiaTourModel();
-//	private LoaiHinhModel loaiHinh = new LoaiHinhModel();
-//	private ThamQuanModel thamQuan = new ThamQuanModel();
-//
 	public TrungTamController() {
 		ThiSinhModel thiSinhModel = new ThiSinhModel();
 		PhongThiModel phongThiModel = new PhongThiModel();
@@ -139,157 +132,6 @@ public class TrungTamController {
 		return "ketQuaTraCuu";
 	}
 
-//
-//	@RequestMapping(value = "/changeTourName", method = RequestMethod.POST)
-//	public RedirectView changeTourName(String maTour, String newTourName) {
-//		try {
-//			if (tourHienTai.getMaTour().equals(maTour)) {
-//				if (newTourName != null) {
-//					tourHienTai.setTenTour(newTourName);
-//					tourHienTai.updateTour(tourHienTai);
-//					for (Iterator<TourModel> iterator = allTours.iterator(); iterator.hasNext();) {
-//						TourModel tourModel = (TourModel) iterator.next();
-//						if (tourModel.getMaTour().equals(maTour)) {
-//							tourModel.setTenTour(newTourName);
-//							break;
-//						}
-//					}
-//				}
-//			}
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return new RedirectView("/tours/" + maTour);
-//	}
-//	
-//	@RequestMapping(value = "/changeDacDiem", method = RequestMethod.POST)
-//	public RedirectView changeDacDiem(String maTour, String newDacDiem) {
-//		try {
-//			if (tourHienTai.getMaTour().equals(maTour)) {
-//				if (newDacDiem != null) {
-//					tourHienTai.setDacDiem(newDacDiem);
-//					tourHienTai.updateTour(tourHienTai);
-//					for (Iterator<TourModel> iterator = allTours.iterator(); iterator.hasNext();) {
-//						TourModel tourModel = (TourModel) iterator.next();
-//						if (tourModel.getMaTour().equals(maTour)) {
-//							tourModel.setDacDiem(newDacDiem);
-//							break;
-//						}
-//					}
-//				}
-//			}
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return new RedirectView("/tours/" + maTour);
-//	}
-//
-//	@RequestMapping(value = "/deleteDiaDiem/{idTour}/{thutu}", method = RequestMethod.GET)
-//	public RedirectView deleteDiaDiem(@PathVariable("idTour") String idTour, @PathVariable("thutu") String thutu) {
-//		int stt = Integer.parseInt(thutu) - 1;
-//		ThamQuanModel thamQuanSelected = list_thamQuan.get(stt);
-//		try {
-//			thamQuanSelected.deleteThamQuan(thamQuanSelected);
-//			list_thamQuan.remove(stt);
-//			Collections.sort(list_thamQuan, ThamQuanModel.sttComparator);
-//			// Nếu xóa số ở giữa thì đặt lại STT
-//			int soLuong = list_thamQuan.size();
-//			int sttMoi = stt + 1;
-//			for (int i = stt; i < soLuong; i++) {
-//				list_thamQuan.get(i).setThutu(sttMoi++);
-//			}
-//
-//			// Update STT cho DB
-//			ArrayList<ThamQuanModel> list_temp = new ArrayList<>(list_thamQuan);
-//			list_temp.forEach(tmd -> {
-//				try {
-////                System.out.println(tmd.getMaTour() + "/ " + tmd.getMaDiaDiem() + "/ " + tmd.getThutu());
-//					tmd.updateThamQuan(tmd);
-//				} catch (Exception ex) {
-//					ex.printStackTrace();
-//				}
-//			});
-//			list_thamQuan.clear();
-//			list_thamQuan = new ArrayList<>(list_temp);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//		return new RedirectView("/tours/" + idTour);
-//	}
-//
-//	@RequestMapping(value = "/changeLoaiHinh", method = RequestMethod.POST)
-//	public RedirectView changeLoaiHinh(String maTour, String maLH, String newloaihinh) {
-//		for (Iterator<LoaiHinhModel> iterator = list_loaiHinh.iterator(); iterator.hasNext();) {
-//			LoaiHinhModel lh = (LoaiHinhModel) iterator.next();
-//			if (lh.getTenLoaiHinh().equals(newloaihinh)) {
-//				maLH = lh.getMaLoaiHinh();
-//				break;
-//			}
-//		}
-//		try {
-//			if (tourHienTai.getMaTour().equals(maTour)) {
-//				if (newloaihinh != null) {
-//					LoaiHinhModel newLH = new LoaiHinhModel(maLH, newloaihinh);
-//					tourHienTai.setMaLoaiHinh(maLH);
-//					tourHienTai.setLoaiHinh(newLH);
-//					tourHienTai.updateTour(tourHienTai);
-//
-//					for (Iterator<TourModel> iterator = allTours.iterator(); iterator.hasNext();) {
-//						TourModel tourModel = (TourModel) iterator.next();
-//						if (tourModel.getMaTour().equals(maTour)) {
-//							tourModel.setMaLoaiHinh(maLH);
-//							tourModel.setLoaiHinh(newLH);
-//							break;
-//						}
-//					}
-//				}
-//			}
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return new RedirectView("/tours/" + maTour);
-//	}
-//
-//	@RequestMapping(value = "/themDiaDiem", method = RequestMethod.POST)
-//	public RedirectView themDiaDiem(String maTour, String newDiaDiem) {
-//		int thuTuCanThem = (list_thamQuan.size()) + 1;
-//		boolean hopLe = true;
-//		for (ThamQuanModel thamQuanModel : list_thamQuan) {
-//			if (thamQuanModel.getThutu() == thuTuCanThem) {
-//				hopLe = false;
-//				break;
-//			}
-//		}
-//		if (hopLe) {
-//			try {
-//				if (tourHienTai.getMaTour().equals(maTour)) {
-//					if (newDiaDiem != null) {
-//						String maDiaDiemCanThem = "";
-//	                    for (DiaDiemModel model : list_diaDiem) {
-//	                        if (model.getTenDiaDiem().equalsIgnoreCase(newDiaDiem)) {
-//	                            maDiaDiemCanThem = model.getMaDiaDiem();
-//	                            break;
-//	                        }
-//	                    }
-//	                    ThamQuanModel newTQ = new ThamQuanModel(maTour, maDiaDiemCanThem, newDiaDiem, thuTuCanThem);
-//	                    newTQ.insertThamQuan(newTQ);
-//	                    list_thamQuan.add(newTQ);
-//	                    Collections.sort(list_thamQuan, ThamQuanModel.sttComparator);
-//					}
-//				}
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//		return new RedirectView("/tours/" + maTour);
-//	}
-//
 	@RequestMapping(value = "/XemDanhSachThiSinhTheoPhong", method = RequestMethod.GET)
 	public String xemDanhSachTheoPhongVaKhoaPage(Model model) {
 		refreshAllList();
@@ -442,7 +284,7 @@ public class TrungTamController {
 		CMND = CMND.trim();
 		// Xét trường hợp không nhập
 		if (checkNullAndEmpty(noiCap) || checkNullAndEmpty(noiSinh) || checkNullAndEmpty(userName)
-				|| checkNullAndEmpty(gioiTinh) || checkNullAndEmpty(userPhone) || checkNullAndEmpty(email) ) {
+				|| checkNullAndEmpty(gioiTinh) || checkNullAndEmpty(userPhone) || checkNullAndEmpty(email)) {
 			model.addAttribute("failure", "Vui lòng điền đầy đủ thông tin thí sinh đăng kí dự thi!");
 			model.addAttribute("thanhCong", false);
 			return "ketQuaDangKyDuThi";
@@ -571,16 +413,113 @@ public class TrungTamController {
 		model.addAttribute("thanhCong", !model.containsAttribute("failure"));
 		return "ketQuaDangKyDuThi"; // html
 	}
-//
-//	@RequestMapping(value = "/tours/query/submitQuery", method = RequestMethod.POST)
-//	public String processQuery(@ModelAttribute TourModelWrapper wrapper, Model model) {
-//
-//		System.out.println(wrapper.getTourList() != null ? wrapper.getTourList().size() : "null list");
-//		System.out.println("--");
-//
-//		model.addAttribute("wrapper", wrapper);
-//
-//		return "tour";
-//	}
-//
+
+	@RequestMapping(value = "/XemChungNhanKetQuaThi", method = RequestMethod.GET)
+	public String xemGiayChungNhan_Page(Model model) {
+		refreshAllList();
+		try {
+			KhoaThiModelWrapper khoa_Wrapper = new KhoaThiModelWrapper();
+			KhoaThiModel khoaModel = new KhoaThiModel();
+			ArrayList<KhoaThiModel> allKT = khoaModel.getAllKT();
+			khoa_Wrapper.setKhoaThiList(allKT);
+			model.addAttribute("allKhoas", khoa_Wrapper);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "xemChungNhan_Nhap";
+	}
+
+	@RequestMapping(value = "/XemChungNhanKetQuaThi/KetQua", method = RequestMethod.POST)
+	public String xemGiayChungNhan_Page(Model model, String SBD, String comboKhoaThi) {
+		refreshAllList();
+		if (checkNullAndEmpty(comboKhoaThi) || checkNullAndEmpty(SBD)) {
+			model.addAttribute("fail", "Không tìm thấy giấy chứng nhận.");
+		} else {
+			DuThiDAL duThiDAL = new DuThiDAL();
+			ArrayList<DuThiModel> allDT;
+			try {
+				allDT = duThiDAL.getAllDT(null, null);
+				DuThiModel duThiModel = null;
+				for (DuThiModel duThi : allDT) {
+					if (duThi.getSBD().equals(SBD) && duThi.getMaKhoaThi().equals(comboKhoaThi)) {
+						duThiModel = duThi;
+					}
+				}
+				// Nếu = null là ko tìm ra
+				if (duThiModel == null) {
+					model.addAttribute("fail", "Không tìm thấy giấy chứng nhận.");
+				} else {
+					// Info thí sinh
+					ThiSinhModel thiSinhModel = new ThiSinhModel();
+					ThiSinhModel thiSinhInfo = thiSinhModel.getThiSinhTheoCMND(duThiModel.getCMND());
+					model.addAttribute("tenThiSinh", thiSinhInfo.getHoTen());
+					model.addAttribute("ngaySinh",
+							thiSinhInfo.getNgaySinh().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+
+					// Info khóa thi
+					KhoaThiModel khoaThiModel = new KhoaThiModel();
+					KhoaThiModel khoaThiInfo = khoaThiModel.getKTByMa(duThiModel.getMaKhoaThi());
+					model.addAttribute("tenKhoaThi", khoaThiInfo.getTenKhoaThi());
+					model.addAttribute("ngayThi",
+							khoaThiInfo.getNgayThi().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+					
+					// Info trình độ
+					DangKyModel dangKyModel = new DangKyModel();
+					ArrayList<DangKyModel> allDKByMaKT = dangKyModel.getAllDKByMaKT(duThiModel.getMaKhoaThi());
+					for (DangKyModel dangKy : allDKByMaKT) {
+						if (dangKy.getCMND().equals(thiSinhInfo.getCMND())) {
+							model.addAttribute("tenTrinhDo", dangKy.getTenTrinhDo());
+							break;
+						}
+					}
+
+					// Info điểm thi
+					BaiThiModel baiThiModel = new BaiThiModel();
+					ArrayList<BaiThiModel> listBaiThi = baiThiModel.getBaiThiByMaPhong(duThiModel.getMaPhong());
+					BaiThiModel baiThiInfo = null;
+					for (BaiThiModel baiThi : listBaiThi) {
+						if (baiThi.getSBD().equals(duThiModel.getSBD())) {
+							baiThiInfo = baiThi;
+							break;
+						}
+					}
+					if (baiThiInfo != null) {
+						DiemThiModel diemThiModel = new DiemThiModel();
+						ArrayList<DiemThiModel> listDiemBonMon = diemThiModel
+								.getDiemThiOfBaiThi(baiThiInfo.getMaBaiThi());
+						double diemDoc = -1, diemNghe = -1, diemNoi = -1, diemViet = -1;
+						for (DiemThiModel diemThiMon : listDiemBonMon) {
+							if (diemThiMon.getTenPhanThi().equals("Đọc")) {
+								diemDoc = diemThiMon.getDiem();
+							}
+							if (diemThiMon.getTenPhanThi().equals("Nghe")) {
+								diemNghe = diemThiMon.getDiem();
+							}
+							if (diemThiMon.getTenPhanThi().equals("Nói")) {
+								diemNoi = diemThiMon.getDiem();
+							}
+							if (diemThiMon.getTenPhanThi().equals("Viết")) {
+								diemViet = diemThiMon.getDiem();
+							}
+						}
+//						if (diemDoc == -1 || diemNghe ==-1 || diemNoi==-1 || diemViet ==-1) {
+//							model.addAttribute("fail", "Không tìm thấy giấy chứng nhận.");
+//						}
+						double diemTB = (diemDoc + diemNghe + diemNoi + diemViet) / 4.0;
+						model.addAttribute("diemDoc", diemDoc);
+						model.addAttribute("diemNghe", diemNghe);
+						model.addAttribute("diemNoi", diemNoi);
+						model.addAttribute("diemViet", diemViet);
+						model.addAttribute("diemTB", diemTB);
+					}
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		model.addAttribute("timDuocGiay", !model.containsAttribute("fail"));
+		return "xemChungNhan_KetQua";
+	}
 }
