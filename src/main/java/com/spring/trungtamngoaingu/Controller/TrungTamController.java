@@ -426,10 +426,27 @@ public class TrungTamController {
 		return "dienThongTinDangKy"; // html
 	}
 
+	private boolean checkNullAndEmpty(String inp) {
+		if (inp == null)
+			return true;
+		if (inp.isBlank())
+			return true;
+		if (inp.isEmpty())
+			return true;
+		return false;
+	}
+
 	@RequestMapping("/DangKyThi/DangKyKhoaThi")
 	public String dangKyDuThi_TraCuu(Model model, String CMND, String ngayCap, String noiCap, String userName,
 			String gioiTinh, String ngaySinh, String noiSinh, String userPhone, String email) {
 		CMND = CMND.trim();
+		// Xét trường hợp không nhập
+		if (checkNullAndEmpty(noiCap) || checkNullAndEmpty(noiSinh) || checkNullAndEmpty(userName)
+				|| checkNullAndEmpty(gioiTinh) || checkNullAndEmpty(userPhone) || checkNullAndEmpty(email) ) {
+			model.addAttribute("failure", "Vui lòng điền đầy đủ thông tin thí sinh đăng kí dự thi!");
+			model.addAttribute("thanhCong", false);
+			return "ketQuaDangKyDuThi";
+		}
 		ThiSinhModel thiSinhModel = new ThiSinhModel();
 		ThiSinhModel thiSinhTheoCMND = thiSinhModel.getThiSinhTheoCMND(CMND);
 		if (thiSinhTheoCMND != null) {
@@ -496,53 +513,54 @@ public class TrungTamController {
 					if (dangKyModel.checkExistsDangKy(maKhoaThiSelected, CMND)) {
 						model.addAttribute("failure",
 								"Người dùng đã đăng kí thi khóa thi này. Mời bạn thi lại vào tháng khác!");
-					}
-					// convert String to LocalDate
-					ThiSinhModel thiSinhModel = new ThiSinhModel();
-					ThiSinhModel ts = thiSinhModel.getThiSinhTheoCMND(CMND);
-					if (ts == null) { // Thí sinh chưa có trên Database
-						String[] dateSinh = ngaySinh.split("-");
-						String[] dateCap = ngayCap.split("-");
-						if (dateSinh.length == 3 && dateCap.length == 3) {
-							int year = Integer.parseInt(dateSinh[0]);
-							int month = Integer.parseInt(dateSinh[1]);
-							int day = Integer.parseInt(dateSinh[2]);
-							LocalDate ngaySinhLD = LocalDate.of(year, month, day);
+					} else {
+						// convert String to LocalDate
+						ThiSinhModel thiSinhModel = new ThiSinhModel();
+						ThiSinhModel ts = thiSinhModel.getThiSinhTheoCMND(CMND);
+						if (ts == null) { // Thí sinh chưa có trên Database
+							String[] dateSinh = ngaySinh.split("-");
+							String[] dateCap = ngayCap.split("-");
+							if (dateSinh.length == 3 && dateCap.length == 3) {
+								int year = Integer.parseInt(dateSinh[0]);
+								int month = Integer.parseInt(dateSinh[1]);
+								int day = Integer.parseInt(dateSinh[2]);
+								LocalDate ngaySinhLD = LocalDate.of(year, month, day);
 
-							int yearCap = Integer.parseInt(dateCap[0]);
-							int monthCap = Integer.parseInt(dateCap[1]);
-							int dayCap = Integer.parseInt(dateCap[2]);
-							LocalDate ngayCapLD = LocalDate.of(yearCap, monthCap, dayCap);
+								int yearCap = Integer.parseInt(dateCap[0]);
+								int monthCap = Integer.parseInt(dateCap[1]);
+								int dayCap = Integer.parseInt(dateCap[2]);
+								LocalDate ngayCapLD = LocalDate.of(yearCap, monthCap, dayCap);
 
-							ThiSinhModel thiSinhDK = new ThiSinhModel(CMND, hoTen, gioiTinh, ngaySinhLD, noiSinh,
-									ngayCapLD, noiCap, phone, email);
-							thiSinhDK.addThiSinh();
+								ThiSinhModel thiSinhDK = new ThiSinhModel(CMND, hoTen, gioiTinh, ngaySinhLD, noiSinh,
+										ngayCapLD, noiCap, phone, email);
+								thiSinhDK.addThiSinh();
+							}
+						} else { // Thí sinh đã có trên Database, đăng ký thi lại
+							String[] dateSinh = ngaySinh.split("-");
+							String[] dateCap = ngayCap.split("-");
+							if (dateSinh.length == 3 && dateCap.length == 3) {
+								int year = Integer.parseInt(dateSinh[0]);
+								int month = Integer.parseInt(dateSinh[1]);
+								int day = Integer.parseInt(dateSinh[2]);
+								LocalDate ngaySinhLD = LocalDate.of(year, month, day);
+
+								int yearCap = Integer.parseInt(dateCap[0]);
+								int monthCap = Integer.parseInt(dateCap[1]);
+								int dayCap = Integer.parseInt(dateCap[2]);
+								LocalDate ngayCapLD = LocalDate.of(yearCap, monthCap, dayCap);
+
+								ThiSinhModel thiSinhDK = new ThiSinhModel(CMND, hoTen, gioiTinh, ngaySinhLD, noiSinh,
+										ngayCapLD, noiCap, phone, email);
+								thiSinhDK.updateThiSinh();
+							}
 						}
-					} else { // Thí sinh đã có trên Database, đăng ký thi lại
-						String[] dateSinh = ngaySinh.split("-");
-						String[] dateCap = ngayCap.split("-");
-						if (dateSinh.length == 3 && dateCap.length == 3) {
-							int year = Integer.parseInt(dateSinh[0]);
-							int month = Integer.parseInt(dateSinh[1]);
-							int day = Integer.parseInt(dateSinh[2]);
-							LocalDate ngaySinhLD = LocalDate.of(year, month, day);
-
-							int yearCap = Integer.parseInt(dateCap[0]);
-							int monthCap = Integer.parseInt(dateCap[1]);
-							int dayCap = Integer.parseInt(dateCap[2]);
-							LocalDate ngayCapLD = LocalDate.of(yearCap, monthCap, dayCap);
-
-							ThiSinhModel thiSinhDK = new ThiSinhModel(CMND, hoTen, gioiTinh, ngaySinhLD, noiSinh,
-									ngayCapLD, noiCap, phone, email);
-							thiSinhDK.updateThiSinh();
-						}
+						DangKyModel dangKyModelMoi = new DangKyModel();
+						dangKyModelMoi.setCMND(CMND);
+						dangKyModelMoi.setMaKT(maKhoaThiSelected);
+						dangKyModelMoi.setTenTrinhDo(comboTrinhDo);
+						dangKyModelMoi.addDangKyThiSinh();
+						model.addAttribute("ketQua", "Đăng ký dự thi thành công");
 					}
-					DangKyModel dangKyModelMoi = new DangKyModel();
-					dangKyModelMoi.setCMND(CMND);
-					dangKyModelMoi.setMaKT(maKhoaThiSelected);
-					dangKyModelMoi.setTenTrinhDo(comboTrinhDo);
-					dangKyModelMoi.addDangKyThiSinh();
-					model.addAttribute("ketQua", "Đăng ký dự thi thành công");
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

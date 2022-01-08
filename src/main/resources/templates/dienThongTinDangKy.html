@@ -119,7 +119,7 @@ wrapper {
 
 		<div class="w3-row w3-padding-64 center-table">
 
-			<h1 class="w3-text-teal">Điền thông tin thí sinh để đăng ký (nếu đã đăng ký ở khóa trước chỉ cần CMND)</h1>
+			<h1 class="w3-text-teal">Điền thông tin thí sinh để đăng ký (nếu đã đăng ký ở khóa trước thì chỉ cần CMND)</h1>
 			<form id="myForm" th:action="@{/DangKyThi/DangKyKhoaThi}" method="post">
 				<ul class="wrapper">
 					<li class="form-row"><label for="CMND"
@@ -127,7 +127,7 @@ wrapper {
 						type="text" name="CMND"></li>
 						
 					<li class="form-row"><label for="ngayCap"
-						style="text-align: end;">Ngày cấp: </label><input type="date" name="ngayCap"></li>
+						style="text-align: end;">Ngày cấp: </label><input type="date" name="ngayCap" value="2012-01-01"></li>
 						
 					<li class="form-row"><label for="noiCap"
 						style="text-align: end;">Nơi cấp: </label><input name="noiCap" ></li>
@@ -145,7 +145,7 @@ wrapper {
 					</li>
 					
 					<li class="form-row"><label for="ngaySinh"
-						style="text-align: end;">Ngày sinh: </label><input type="date" name="ngaySinh"></li>
+						style="text-align: end;">Ngày sinh: </label><input type="date" name="ngaySinh" value="2000-01-01"></li>
 						
 					<li class="form-row"><label for="noiSinh"
 						style="text-align: end;">Nơi sinh: </label><input name="noiSinh"></li>
