@@ -70,6 +70,7 @@ public class TrungTamController {
 //
 	@RequestMapping("/TraCuu")
 	public String traCuuPage(Model model) {
+		refreshAllList();
 		ThiSinhModelWrapper wrapper = new ThiSinhModelWrapper();
 		wrapper.setThiSinhList(allThiSinhs);
 		model.addAttribute("allThiSinhs", wrapper);
@@ -463,7 +464,7 @@ public class TrungTamController {
 					model.addAttribute("tenKhoaThi", khoaThiInfo.getTenKhoaThi());
 					model.addAttribute("ngayThi",
 							khoaThiInfo.getNgayThi().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-					
+
 					// Info trình độ
 					DangKyModel dangKyModel = new DangKyModel();
 					ArrayList<DangKyModel> allDKByMaKT = dangKyModel.getAllDKByMaKT(duThiModel.getMaKhoaThi());
@@ -503,9 +504,9 @@ public class TrungTamController {
 								diemViet = diemThiMon.getDiem();
 							}
 						}
-//						if (diemDoc == -1 || diemNghe ==-1 || diemNoi==-1 || diemViet ==-1) {
-//							model.addAttribute("fail", "Không tìm thấy giấy chứng nhận.");
-//						}
+						if (diemDoc == -1 || diemNghe == -1 || diemNoi == -1 || diemViet == -1) {
+							model.addAttribute("fail", "Không tìm thấy giấy chứng nhận.");
+						}
 						double diemTB = (diemDoc + diemNghe + diemNoi + diemViet) / 4.0;
 						model.addAttribute("diemDoc", diemDoc);
 						model.addAttribute("diemNghe", diemNghe);
