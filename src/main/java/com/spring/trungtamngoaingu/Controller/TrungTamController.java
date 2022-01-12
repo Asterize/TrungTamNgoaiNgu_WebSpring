@@ -283,18 +283,19 @@ public class TrungTamController {
 	public String dangKyDuThi_TraCuu(Model model, String CMND, String ngayCap, String noiCap, String userName,
 			String gioiTinh, String ngaySinh, String noiSinh, String userPhone, String email) {
 		CMND = CMND.trim();
-		// Xét trường hợp không nhập
-		if (checkNullAndEmpty(noiCap) || checkNullAndEmpty(noiSinh) || checkNullAndEmpty(userName)
-				|| checkNullAndEmpty(gioiTinh) || checkNullAndEmpty(userPhone) || checkNullAndEmpty(email)) {
-			model.addAttribute("failure", "Vui lòng điền đầy đủ thông tin thí sinh đăng kí dự thi!");
-			model.addAttribute("thanhCong", false);
-			return "ketQuaDangKyDuThi";
-		}
+		
 		ThiSinhModel thiSinhModel = new ThiSinhModel();
 		ThiSinhModel thiSinhTheoCMND = thiSinhModel.getThiSinhTheoCMND(CMND);
 		if (thiSinhTheoCMND != null) {
 			model.addAttribute("thiSinhDangKy", thiSinhTheoCMND);
 		} else {
+			// Xét trường hợp không nhập
+			if (checkNullAndEmpty(noiCap) || checkNullAndEmpty(noiSinh) || checkNullAndEmpty(userName)
+					|| checkNullAndEmpty(gioiTinh) || checkNullAndEmpty(userPhone) || checkNullAndEmpty(email)) {
+				model.addAttribute("failure", "Vui lòng điền đầy đủ thông tin thí sinh đăng kí dự thi!");
+				model.addAttribute("thanhCong", false);
+				return "ketQuaDangKyDuThi";
+			}
 			String[] dateSinh = ngaySinh.split("-");
 			String[] dateCap = ngayCap.split("-");
 			if (dateSinh.length == 3 && dateCap.length == 3) {
